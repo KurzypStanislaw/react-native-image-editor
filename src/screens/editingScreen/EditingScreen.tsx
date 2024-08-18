@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
-import { Slider } from '@miblanchard/react-native-slider';
 import CustomSlider from "../../components/slider/CustomSlider";
+import {Button} from "react-native-paper";
 
 
 
@@ -18,11 +18,20 @@ const EditingScreen: React.FC = () => {
     return (
         <View style={styles.container}>
 
-            <ScrollView style={styles.sliderWrapper}>
+            <View style={{height:'50%'}}>
+            </View>
+
+            <ScrollView style={styles.scrollViewContainer}>
                 <View style={styles.sliderWrapper}>
                     <CustomSlider initialValue={0} minValue={-100} maxValue={100} onValueChange={handleChange} title={"slider1"}/>
                 </View>
+
+                    <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
+                        Press me
+                    </Button>
+
             </ScrollView>
+
 
         </View>
     );
@@ -31,10 +40,12 @@ const EditingScreen: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#2b3349',
-        padding: 20,
+        flexDirection: 'column',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        backgroundColor: '#2b3347',
+        width:'100%',
+        height:'100%',
     },
     textWhite: {
         color: '#ffffff',
@@ -52,13 +63,16 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginTop: 20,
     },
-    sliderWrapper: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: 100,
+    scrollViewContainer: {
+        flex: 1,
+        width:'100%',
+        backgroundColor: '#4e5b7c',
+        paddingHorizontal: 20,
         height: '50%',
-        // justifyContent: 'center'
-
+        alignSelf: 'flex-end',
+    },
+    sliderWrapper: {
+      width: '100%',
     }
 });
 
