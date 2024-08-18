@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, TextComponent, ScrollView} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import { Slider } from '@miblanchard/react-native-slider';
+import CustomSlider from "../../components/slider/CustomSlider";
 
 
 
@@ -10,65 +11,16 @@ const EditingScreen: React.FC = () => {
 
     const [sliderValue, setSliderValue] = React.useState(0.2); // Initialize with default value
 
+    const handleChange = ( value: number ) => {
+        console.log( value );
+    };
+
     return (
         <View style={styles.container}>
 
-            <ScrollView>
+            <ScrollView style={styles.sliderWrapper}>
                 <View style={styles.sliderWrapper}>
-                    <Text>Saturation</Text>
-                    <Slider
-                        // animateTransitions={true}
-                        trackClickable={true}
-                        // debugTouchArea
-                        startFromZero={true}
-                        minimumValue={-100}
-                        maximumValue={100}
-                        value={sliderValue}
-                        onValueChange={(val) => setSliderValue(val[0])} // Update sliderValue on change
-                    />
-
-                </View>
-
-                <View style={styles.sliderWrapper}>
-                    <Text>Temperature</Text>
-                    <Slider
-                        // animateTransitions={true}
-                        trackClickable={true}
-                        // debugTouchArea
-                        startFromZero={true}
-                        minimumValue={-100}
-                        maximumValue={100}
-                        value={sliderValue}
-                        onValueChange={(val) => setSliderValue(val[0])} // Update sliderValue on change
-                    />
-                </View>
-
-                <View style={styles.sliderWrapper}>
-                    <Text>Tint</Text>
-                    <Slider
-                        // animateTransitions={true}
-                        trackClickable={true}
-                        // debugTouchArea
-                        startFromZero={true}
-                        minimumValue={-100}
-                        maximumValue={100}
-                        value={sliderValue}
-                        onValueChange={(val) => setSliderValue(val[0])} // Update sliderValue on change
-                    />
-                </View>
-
-                <View style={styles.sliderWrapper}>
-                    <Text>Vibrance</Text>
-                    <Slider
-                        // animateTransitions={true}
-                        trackClickable={true}
-                        // debugTouchArea
-                        startFromZero={true}
-                        minimumValue={-100}
-                        maximumValue={100}
-                        value={sliderValue}
-                        onValueChange={(val) => setSliderValue(val[0])} // Update sliderValue on change
-                    />
+                    <CustomSlider initialValue={0} minValue={-100} maxValue={100} onValueChange={handleChange} title={"slider1"}/>
                 </View>
             </ScrollView>
 
@@ -101,9 +53,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     sliderWrapper: {
-        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        width: 100,
         height: '50%',
-        justifyContent: 'center'
+        // justifyContent: 'center'
 
     }
 });
