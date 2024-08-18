@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {View, StyleSheet, ScrollView, VirtualizedList, Text} from 'react-native';
 import CustomSlider from "../../components/slider/CustomSlider";
-import {Button} from "react-native-paper";
+import {Button, Divider} from "react-native-paper";
+import ListMenu from "../../components/ menu/ListMenu";
 
 
 
@@ -15,24 +16,46 @@ const EditingScreen: React.FC = () => {
         console.log( value );
     };
 
+
+    const dummySliders = Array.from({ length: 10 }, (_, index) => (
+        <View key={index} style={styles.sliderWrapper}>
+            <CustomSlider
+                initialValue={0}
+                minValue={-100}
+                maxValue={100}
+                onValueChange={handleChange}
+                title={`slider${index + 1}`}
+            />
+        </View>
+    ));
+
+
     return (
         <View style={styles.container}>
 
-            <View style={{height:'50%'}}>
+            <View style={{height:'70%'}}>
+                <View style={styles.photoMock}/>
             </View>
 
             <ScrollView style={styles.scrollViewContainer}>
-                <View style={styles.sliderWrapper}>
-                    <CustomSlider initialValue={0} minValue={-100} maxValue={100} onValueChange={handleChange} title={"slider1"}/>
-                </View>
-
-                    <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
-                        Press me
-                    </Button>
+                {dummySliders}
+                <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
+                    Press me
+                </Button>
 
             </ScrollView>
 
+            <ListMenu
+                isColorSelected={false}
+                isLightSelected={false}
+                isCropSelected={false}
+            >
+                <Text>aaaaa</Text>
+            </ListMenu>
 
+            <View>
+
+            </View>
         </View>
     );
 };
@@ -46,6 +69,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2b3347',
         width:'100%',
         height:'100%',
+        paddingTop: 35,
     },
     textWhite: {
         color: '#ffffff',
@@ -68,11 +92,26 @@ const styles = StyleSheet.create({
         width:'100%',
         backgroundColor: '#4e5b7c',
         paddingHorizontal: 20,
-        height: '50%',
+        height: '30%',
         alignSelf: 'flex-end',
+        borderTopLeftRadius:20,
+        borderTopRightRadius:20,
+        paddingVertical: '5%',
     },
     sliderWrapper: {
       width: '100%',
+    },
+    photoSection: {
+        display: "flex",
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    photoMock: {
+        height:'100%',
+        width:'100%',
+        backgroundColor:"#123456",
+        borderRadius: 20,
     }
 });
 
