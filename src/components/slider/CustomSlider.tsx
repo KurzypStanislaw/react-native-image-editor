@@ -36,19 +36,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#2b3349',
         padding: 20,
+        paddingTop: 5,
     },
 
     sliderTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 12,
+        // fontWeight: 'bold',
         fontFamily: 'Roboto',
         color: 'white',
     },
     sliderWrapper: {
         width: '100%',
-        height: '50%',
         justifyContent: 'center'
-
     }
 });
 
