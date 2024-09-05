@@ -1,22 +1,46 @@
-import React, {useState} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
-import { Slider } from '@miblanchard/react-native-slider';
+import {useNavigation} from "@react-navigation/native";
+import {HomeScreenProps} from "../../types/types";
+import EditingContext from "../../context/EditingContext";
 
 
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [hasPermission, setHasPermission] = useState<boolean>(false);
+    const { setImageURI, resetState } = useContext(EditingContext);
 
-const HomeScreen: React.FC = () => {
+    useEffect(() => {
+        (async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasPermission(status === 'granted');
+        })();
+    }, []);
 
-    const [selectedImage, setSelectedImage] = useState<string>();
+    useEffect(() => {
+        if (selectedImage) {
+            navigation.navigate("Edit", {
+                uri: selectedImage,
+            });
+            // after choosing new photo all filters should be changed to default values!
+            resetState();
+            setImageURI(selectedImage);
+        }
+    }, [selectedImage]);
 
     const handlePress = () => {
-        pickImageAsync();
+        if (hasPermission) {
+            pickImageAsync();
+        } else {
+            alert('We need permission to access your photo library.');
+        }
     };
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
+            allowsEditing: false,
             quality: 1,
         });
 
@@ -26,7 +50,6 @@ const HomeScreen: React.FC = () => {
             alert('You did not select any image.');
         }
     };
-    const [sliderValue, setSliderValue] = React.useState(0.2); // Initialize with default value
 
     return (
         <View style={styles.container}>
@@ -38,21 +61,6 @@ const HomeScreen: React.FC = () => {
                 />
                 <Text style={styles.textWhite}>Click anywhere to start!</Text>
             </TouchableOpacity>
-            <View style={styles.sliderWrapper}>
-                <Slider
-                    // animateTransitions={true}
-                    trackClickable={true}
-                    // debugTouchArea
-                    startFromZero={true}
-                    minimumValue={-100}
-                    maximumValue={100}
-                    value={sliderValue}
-                    onValueChange={(val) => setSliderValue(val[0])} // Update sliderValue on change
-                />
-
-                <Text style={styles.valueText}>Value: {sliderValue.toFixed(1)}</Text>
-            </View>
-
         </View>
     );
 };
@@ -72,21 +80,12 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto',
         marginTop: 20,
     },
-    slider: {
-        width: '80%',
-        marginTop: 40,
-    },
-    valueText: {
-        color: '#ffffff',
-        fontSize: 18,
+    image: {
+        width: 300,
+        height: 300,
         marginTop: 20,
+        borderRadius: 10,
     },
-    sliderWrapper: {
-        width: '100%',
-        height: '50%',
-        justifyContent: 'center'
-
-    }
 });
 
 export default HomeScreen;

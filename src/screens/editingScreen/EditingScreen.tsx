@@ -1,29 +1,32 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import {View, StyleSheet, Image, Text} from 'react-native';
 import CustomSlider from "../../components/slider/CustomSlider";
 import BottomMenu from "../../components/menu/BottomMenu";
 import { EditingProvider } from "../../context/EditingContext";
 import ColorTab from "../../components/colorTab/ColorTab";
 import CropTab from "../../components/cropTab/CropTab";
 import LightTab from "../../components/lightTab/LightTab";
+import {EditingScreenProps} from "../../types/types";
 
-const EditingScreen: React.FC = () => {
+
+const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
     const [selectedImage, setSelectedImage] = React.useState('./assets/test_img.jpg');
     const [isColorSelected, setIsColorSelected] = React.useState(false);
     const [isLightSelected, setIsLightSelected] = React.useState(false);
     const [isCropSelected, setIsCropSelected] = React.useState(false);
 
+
+    const { uri } = route.params;
+
     return (
-        <EditingProvider>
+        <>
             <View style={styles.container}>
                 <View style={{ height: '70%' }}>
                     <Image
-                        source={{ uri: selectedImage }}
+                        source={{ uri: uri }}
                         style={styles.image}
                     />
                 </View>
-
-
             </View>
 
             {isColorSelected && <ColorTab />}
@@ -39,24 +42,24 @@ const EditingScreen: React.FC = () => {
                 setIsCropSelected={setIsCropSelected}
             />
 
-        </EditingProvider>
+        </>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        padding: "3%",
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'space-evenly',
+        justifyContent: 'flex-start',
         backgroundColor: '#2b3347',
         width: '100%',
-        height: '100%',
-        paddingTop: 35,
+        height: '70%',
     },
     image: {
         width: '100%',
         height: '100%',
-        resizeMode: 'cover',
+        resizeMode: 'contain',
     },
     sliderWrapper: {
         width: '100%',

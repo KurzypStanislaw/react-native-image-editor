@@ -1,4 +1,5 @@
 import React, {createContext, FC, useState, ReactNode, useEffect} from "react";
+import { Image } from 'react-native';
 
 export interface EditorState {
     width: number;
@@ -37,21 +38,52 @@ const defaultEditorState: EditorState = {
 const EditingContext = createContext<{
     state: EditorState;
     setState: React.Dispatch<React.SetStateAction<EditorState>>;
+    imageURI: string | null,
+    setImageURI: React.Dispatch<React.SetStateAction<string | null>>;
+    resetState: () => void;
 }>({
+    imageURI: "",
+    setImageURI: () => {},
     state: defaultEditorState,
     setState: () => {},
+    resetState: () => {}
 });
 
 
 const EditingProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [state, setState] = useState<EditorState>(defaultEditorState);
+    const [imageURI, setImageURI] = React.useState<string | null>(null);
 
     useEffect(() => {
         console.log('The state has changed!' + state);
     }, [state]);
 
+    useEffect(() => {
+        if (imageURI) {
+            // Get the width and height of the image
+            Image.getSize(
+                imageURI,
+                (width: number, height: number) => {
+                    setState(prevState => ({
+                        ...prevState,
+                        width,
+                        height
+                    }));
+                },
+                (error: any) => {
+                    console.error('Error getting image size:', error);
+                }
+            );
+        }
+    }, [imageURI]);
+
+
+    const resetState = () => {
+        setState(defaultEditorState);
+    }
+
     return (
-        <EditingContext.Provider value={{ state, setState }}>
+        <EditingContext.Provider value={{ state, setState, imageURI, setImageURI, resetState }}>
             {children}
         </EditingContext.Provider>
     );
