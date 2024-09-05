@@ -1,21 +1,21 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, ScrollView, VirtualizedList, Text} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image } from 'react-native';
 import CustomSlider from "../../components/slider/CustomSlider";
-import {Button, Divider} from "react-native-paper";
-import ListMenu from "../../components/ menu/ListMenu";
-
-
+import { Button } from "react-native-paper";
+import BottomMenu from "../../components/menu/BottomMenu";
+import { EditingProvider } from "../../context/EditingContext";
+import ColorTab from "../../components/colorTab/ColorTab";
 
 const EditingScreen: React.FC = () => {
-
-    const [selectedImage, setSelectedImage] = useState<string>();
-
     const [sliderValue, setSliderValue] = React.useState(0.2); // Initialize with default value
+    const [selectedImage, setSelectedImage] = React.useState('./assets/test_img.jpg');
+    const [isColorSelected, setIsColorSelected] = React.useState(false);
+    const [isLightSelected, setIsLightSelected] = React.useState(false);
+    const [isCropSelected, setIsCropSelected] = React.useState(false);
 
-    const handleChange = ( value: number ) => {
-        console.log( value );
+    const handleChange = (value: number) => {
+        console.log(value);
     };
-
 
     const dummySliders = Array.from({ length: 10 }, (_, index) => (
         <View key={index} style={styles.sliderWrapper}>
@@ -26,37 +26,35 @@ const EditingScreen: React.FC = () => {
                 onValueChange={handleChange}
                 title={`slider${index + 1}`}
             />
+            {/* <Divider /> */}
         </View>
     ));
 
-
     return (
-        <View style={styles.container}>
+        <EditingProvider>
+            <View style={styles.container}>
+                <View style={{ height: '70%' }}>
+                    <Image
+                        source={{ uri: selectedImage }}
+                        style={styles.image}
+                    />
+                </View>
 
-            <View style={{height:'70%'}}>
-                <View style={styles.photoMock}/>
-            </View>
-
-            <ScrollView style={styles.scrollViewContainer}>
-                {dummySliders}
-                <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
-                    Press me
-                </Button>
-
-            </ScrollView>
-
-            <ListMenu
-                isColorSelected={false}
-                isLightSelected={false}
-                isCropSelected={false}
-            >
-                <Text>aaaaa</Text>
-            </ListMenu>
-
-            <View>
 
             </View>
-        </View>
+
+            {isColorSelected && <ColorTab />}
+
+            <BottomMenu
+                isColorSelected={isColorSelected}
+                setIsColorSelected={setIsColorSelected}
+                isLightSelected={isLightSelected}
+                setIsLightSelected={setIsLightSelected}
+                isCropSelected={isCropSelected}
+                setIsCropSelected={setIsCropSelected}
+            />
+
+        </EditingProvider>
     );
 };
 
@@ -64,55 +62,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        // justifyContent: 'center',
-        // alignItems: 'center',
+        justifyContent: 'space-evenly',
         backgroundColor: '#2b3347',
-        width:'100%',
-        height:'100%',
+        width: '100%',
+        height: '100%',
         paddingTop: 35,
     },
-    textWhite: {
-        color: '#ffffff',
-        fontSize: 30,
-        fontWeight: 'bold',
-        fontFamily: 'Roboto',
-        marginTop: 20,
-    },
-    slider: {
-        width: '80%',
-        marginTop: 40,
-    },
-    valueText: {
-        color: '#ffffff',
-        fontSize: 18,
-        marginTop: 20,
-    },
-    scrollViewContainer: {
-        flex: 1,
-        width:'100%',
-        backgroundColor: '#4e5b7c',
-        paddingHorizontal: 20,
-        height: '30%',
-        alignSelf: 'flex-end',
-        borderTopLeftRadius:20,
-        borderTopRightRadius:20,
-        paddingVertical: '5%',
+    image: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
     },
     sliderWrapper: {
-      width: '100%',
+        width: '100%',
     },
-    photoSection: {
-        display: "flex",
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    photoMock: {
-        height:'100%',
-        width:'100%',
-        backgroundColor:"#123456",
-        borderRadius: 20,
-    }
 });
 
 export default EditingScreen;
