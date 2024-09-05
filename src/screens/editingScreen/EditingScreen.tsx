@@ -1,34 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import CustomSlider from "../../components/slider/CustomSlider";
-import { Button } from "react-native-paper";
 import BottomMenu from "../../components/menu/BottomMenu";
 import { EditingProvider } from "../../context/EditingContext";
 import ColorTab from "../../components/colorTab/ColorTab";
+import CropTab from "../../components/cropTab/CropTab";
+import LightTab from "../../components/lightTab/LightTab";
 
 const EditingScreen: React.FC = () => {
-    const [sliderValue, setSliderValue] = React.useState(0.2); // Initialize with default value
     const [selectedImage, setSelectedImage] = React.useState('./assets/test_img.jpg');
     const [isColorSelected, setIsColorSelected] = React.useState(false);
     const [isLightSelected, setIsLightSelected] = React.useState(false);
     const [isCropSelected, setIsCropSelected] = React.useState(false);
-
-    const handleChange = (value: number) => {
-        console.log(value);
-    };
-
-    const dummySliders = Array.from({ length: 10 }, (_, index) => (
-        <View key={index} style={styles.sliderWrapper}>
-            <CustomSlider
-                initialValue={0}
-                minValue={-100}
-                maxValue={100}
-                onValueChange={handleChange}
-                title={`slider${index + 1}`}
-            />
-            {/* <Divider /> */}
-        </View>
-    ));
 
     return (
         <EditingProvider>
@@ -44,6 +27,8 @@ const EditingScreen: React.FC = () => {
             </View>
 
             {isColorSelected && <ColorTab />}
+            {isCropSelected && <CropTab />}
+            {isLightSelected && <LightTab />}
 
             <BottomMenu
                 isColorSelected={isColorSelected}
