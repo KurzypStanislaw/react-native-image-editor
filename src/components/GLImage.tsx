@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { GLView } from 'expo-gl';
 import { Asset } from 'expo-asset';
 import { StyleSheet, View, Image, Text } from 'react-native';
-import * as FileSystem from 'expo-file-system';
 
 const MyGLComponent = () => {
-    const [imageUri, setImageUri] = useState(null);
 
     // Shader source code (vertex and fragment shaders)
     const vertexShaderSource = `
@@ -22,8 +20,11 @@ const MyGLComponent = () => {
         precision mediump float;
         varying vec2 v_texcoord;
         uniform sampler2D texture;
+        uniform float brightness; // Uniform variable for brightness
+        
         void main() {
-            gl_FragColor = texture2D(texture, v_texcoord);
+            vec4 color = texture2D(texture, v_texcoord);
+            gl_FragColor = vec4(color.rgb * brightness, color.a); // Adjust brightness
         }
     `;
 
@@ -58,8 +59,6 @@ const MyGLComponent = () => {
         // Load and download the image asset
         const asset = Asset.fromModule(require('../../assets/test_img.jpg'));
         await asset.downloadAsync();
-
-        setImageUri(asset.localUri); // To render the image in the <Image> component
 
         // Compile shaders
         const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -120,6 +119,12 @@ const MyGLComponent = () => {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
+        // Get location of the brightness uniform
+        const brightnessLocation = gl.getUniformLocation(program, 'brightness');
+
+        // Set the brightness value (e.g., 1.5 for 50% brighter)
+        gl.uniform1f(brightnessLocation, 1.5);
+
         // Clear and draw the texture to the GLView
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -130,14 +135,6 @@ const MyGLComponent = () => {
 
     return (
         <View style={styles.container}>
-            {/* Display image for debugging */}
-            {imageUri ? (
-                <Image source={{ uri: imageUri }} style={styles.image} resizeMode="contain" />
-            ) : (
-                <Text>Loading image...</Text>
-            )}
-
-            {/* GLView component for rendering */}
             <GLView style={styles.glView} onContextCreate={onContextCreate} />
         </View>
     );
@@ -146,18 +143,15 @@ const MyGLComponent = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
     },
     glView: {
         width: 300,
-        height: 300,
+        height: 400,
         marginTop: 20,
     },
-    image: {
-        width: 200,
-        height: 200,
-    },
+
 });
 
 export default MyGLComponent;
