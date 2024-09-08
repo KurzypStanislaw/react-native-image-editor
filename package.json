@@ -19,6 +19,7 @@
     "expo": "~51.0.26",
     "expo-gl": "~14.0.2",
     "expo-image-picker": "^15.0.7",
+    "expo-media-library": "^16.0.4",
     "expo-modules-core": "*",
     "expo-status-bar": "~1.12.1",
     "gl-react": "^5.2.0",
