@@ -28,7 +28,7 @@ const defaultEditorState: EditorState = {
     negative: 0,
     contrast: 0,
     saturation: 0,
-    brightness: 0,
+    brightness: 1,
     temperature: 0,
     exposure: 0,
     colorOverlay: [0.0, 0.0, 0.0],
