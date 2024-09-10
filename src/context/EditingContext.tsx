@@ -28,7 +28,7 @@ const defaultEditorState: EditorState = {
     negative: 0,
     contrast: 0,
     saturation: 0,
-    brightness: 1,
+    brightness: 0,
     temperature: 0,
     exposure: 0,
     colorOverlay: [0.0, 0.0, 0.0],
@@ -54,9 +54,19 @@ const EditingProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [state, setState] = useState<EditorState>(defaultEditorState);
     const [imageURI, setImageURI] = React.useState<string | null>(null);
 
-    useEffect(() => {
-        console.log('The state has changed!' + state);
-    }, [state]);
+    useEffect(() => console.log(`Width changed to: ${state.width}`), [state.width]);
+    useEffect(() => console.log(`Height changed to: ${state.height}`), [state.height]);
+    useEffect(() => console.log(`Hue changed to: ${state.hue}`), [state.hue]);
+    useEffect(() => console.log(`Blur changed to: ${state.blur}`), [state.blur]);
+    useEffect(() => console.log(`Sepia changed to: ${state.sepia}`), [state.sepia]);
+    useEffect(() => console.log(`Sharpen changed to: ${state.sharpen}`), [state.sharpen]);
+    useEffect(() => console.log(`Negative changed to: ${state.negative}`), [state.negative]);
+    useEffect(() => console.log(`Contrast changed to: ${state.contrast}`), [state.contrast]);
+    useEffect(() => console.log(`Saturation changed to: ${state.saturation}`), [state.saturation]);
+    useEffect(() => console.log(`Brightness changed to: ${state.brightness}`), [state.brightness]);
+    useEffect(() => console.log(`Temperature changed to: ${state.temperature}`), [state.temperature]);
+    useEffect(() => console.log(`Exposure changed to: ${state.exposure}`), [state.exposure]);
+    useEffect(() => console.log(`ColorOverlay changed to: [${state.colorOverlay}]`), [state.colorOverlay]);
 
     useEffect(() => {
         if (imageURI) {
