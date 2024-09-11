@@ -40,7 +40,7 @@ const ColorTab: React.FC = () => {
                 <CustomSlider
                     initialValue={state.sharpen}
                     minValue={0}
-                    maxValue={15}
+                    maxValue={0.1}
                     onValueChange={(value) => handleChange("sharpen", value)}
                     title={`Sharpen`}
                 />

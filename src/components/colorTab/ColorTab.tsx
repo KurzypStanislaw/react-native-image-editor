@@ -47,8 +47,8 @@ const ColorTab: React.FC = () => {
 
                 <CustomSlider
                     initialValue={state.temperature}
-                    minValue={0}
-                    maxValue={4000}
+                    minValue={-10000}
+                    maxValue={30000}
                     onValueChange={(value) => handleChange("temperature", value)}
                     title={`Temperature`}
                 />

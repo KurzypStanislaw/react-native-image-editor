@@ -10,12 +10,13 @@ import fragmentShaderSource from "../utils/shader";
 const MyGLComponent = () => {
     const { state } = useContext(EditingContext);
     const glRef  = useRef(null);
-    const textureRef = useRef(null);
-    const brightnessLocationRef = useRef(null);
-    const contrastLocationRef = useRef(null);
-    const saturationLocationRef = useRef(null);
-    const exposureLocationRef = useRef(null);
-
+    const textureRef = useRef<WebGLUniformLocation | null>(null);
+    const brightnessLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const contrastLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const saturationLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const exposureLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const temperatureLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const sharpenLocationRef = useRef<WebGLUniformLocation | null>(null);
 
     const vertexShaderSource = `
         attribute vec4 position;
@@ -72,7 +73,7 @@ const MyGLComponent = () => {
         const program = linkProgram(gl, vertexShader, fragmentShader);
         gl.useProgram(program);
 
-        // Setting WebGl context position ??
+        // Setting WebGl context position
         const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         const positions = new Float32Array([
@@ -100,6 +101,11 @@ const MyGLComponent = () => {
         gl.enableVertexAttribArray(texcoordAttributeLocation);
         gl.vertexAttribPointer(texcoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
+        const resolutionAttributeLocation = gl.getAttribLocation(program, 'resolution');
+        gl.uniform2f(resolutionAttributeLocation, asset.width as number, asset.height as number);
+        console.log('Width: ', asset.width, 'Height: ', asset.height);
+
+
         // Creating texture, due to the image dimensions not being powers of 2 there are some additional setting required
         const texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -112,10 +118,14 @@ const MyGLComponent = () => {
         textureRef.current = texture;
 
         // Creating reference to FILTERS uniforms!!
-        brightnessLocationRef.current = gl.getUniformLocation(program, 'brightness');
-        contrastLocationRef.current = gl.getUniformLocation(program, 'contrast');
-        saturationLocationRef.current = gl.getUniformLocation(program, 'saturation');
-        exposureLocationRef.current = gl.getUniformLocation(program, 'exposure');
+        if (program) {
+            brightnessLocationRef.current = gl.getUniformLocation(program, 'brightness');
+            contrastLocationRef.current = gl.getUniformLocation(program, 'contrast');
+            saturationLocationRef.current = gl.getUniformLocation(program, 'saturation');
+            exposureLocationRef.current = gl.getUniformLocation(program, 'exposure');
+            temperatureLocationRef.current = gl.getUniformLocation(program, 'temperature');
+            sharpenLocationRef.current = gl.getUniformLocation(program, 'sharpen');
+        }
 
 
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -152,6 +162,8 @@ const MyGLComponent = () => {
             contrastLocationRef.current &&
             saturationLocationRef.current &&
             exposureLocationRef.current &&
+            temperatureLocationRef &&
+            sharpenLocationRef &&
             textureRef.current
         ) {
             const gl: ExpoWebGLRenderingContext = glRef.current;
@@ -161,13 +173,15 @@ const MyGLComponent = () => {
             gl.uniform1f(contrastLocationRef.current, state.contrast);
             gl.uniform1f(saturationLocationRef.current, state.saturation);
             gl.uniform1f(exposureLocationRef.current, state.exposure);
+            gl.uniform1f(temperatureLocationRef.current, state.temperature);
+            gl.uniform1f(sharpenLocationRef.current, state.sharpen);
 
 
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             gl.endFrameEXP();
         }
-    }, [state.brightness, state.exposure, state.saturation, state.contrast]);
+    }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen]);
 
     return (
         <View style={styles.container}>
