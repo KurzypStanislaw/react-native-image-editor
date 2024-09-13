@@ -15,24 +15,24 @@ const ColorTab: React.FC = () => {
             <ScrollView contentContainerStyle={styles.slidersContainer}>
                 <CustomSlider
                     initialValue={state.brightness}
-                    minValue={0}
-                    maxValue={5}
+                    minValue={-1}
+                    maxValue={1}
                     onValueChange={(value) => handleChange("brightness", value)}
                     title={`Brightness`}
                 />
 
                 <CustomSlider
                     initialValue={state.contrast}
-                    minValue={-10}
-                    maxValue={10}
+                    minValue={-1}
+                    maxValue={1}
                     onValueChange={(value) => handleChange("contrast", value)}
                     title={`Contrast`}
                 />
 
                 <CustomSlider
                     initialValue={state.exposure}
-                    minValue={-1}
-                    maxValue={1}
+                    minValue={-2}
+                    maxValue={2}
                     onValueChange={(value) => handleChange("exposure", value)}
                     title={`Exposure`}
                 />
@@ -40,7 +40,7 @@ const ColorTab: React.FC = () => {
                 <CustomSlider
                     initialValue={state.sharpen}
                     minValue={0}
-                    maxValue={15}
+                    maxValue={0.1}
                     onValueChange={(value) => handleChange("sharpen", value)}
                     title={`Sharpen`}
                 />

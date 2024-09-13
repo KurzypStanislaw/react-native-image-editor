@@ -20,6 +20,7 @@ const CustomSlider : React.FC<Props> = (props) => {
         <View>
             <Text style={styles.sliderTitle}>{props.title}</Text>
             <Slider
+                step={0.01}
                 value={sliderValue}
                 minimumValue={props.minValue}
                 maximumValue={props.maxValue}

@@ -5,12 +5,18 @@ import { Asset } from 'expo-asset';
 import { StyleSheet, View } from 'react-native';
 import EditingContext from "../context/EditingContext";
 import {Button} from "react-native-paper";
+import fragmentShaderSource from "../utils/shader";
 
 const MyGLComponent = () => {
     const { state } = useContext(EditingContext);
     const glRef  = useRef(null);
-    const textureRef = useRef(null);
-    const brightnessLocationRef = useRef(null);
+    const textureRef = useRef<WebGLUniformLocation | null>(null);
+    const brightnessLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const contrastLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const saturationLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const exposureLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const temperatureLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const sharpenLocationRef = useRef<WebGLUniformLocation | null>(null);
 
     const vertexShaderSource = `
         attribute vec4 position;
@@ -22,17 +28,6 @@ const MyGLComponent = () => {
         }
     `;
 
-    const fragmentShaderSource = `
-        precision mediump float;
-        varying vec2 v_texcoord;
-        uniform sampler2D texture;
-        uniform float brightness; 
-        
-        void main() {
-            vec4 color = texture2D(texture, v_texcoord);
-            gl_FragColor = vec4(color.rgb * brightness, color.a); 
-        }
-    `;
 
     const createShader = (gl: ExpoWebGLRenderingContext, type: any, source: string) => {
         // @ts-ignore
@@ -78,7 +73,7 @@ const MyGLComponent = () => {
         const program = linkProgram(gl, vertexShader, fragmentShader);
         gl.useProgram(program);
 
-        // Setting WebGl context position ??
+        // Setting WebGl context position
         const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         const positions = new Float32Array([
@@ -106,6 +101,11 @@ const MyGLComponent = () => {
         gl.enableVertexAttribArray(texcoordAttributeLocation);
         gl.vertexAttribPointer(texcoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
+        const resolutionAttributeLocation = gl.getAttribLocation(program, 'resolution');
+        gl.uniform2f(resolutionAttributeLocation, asset.width as number, asset.height as number);
+        console.log('Width: ', asset.width, 'Height: ', asset.height);
+
+
         // Creating texture, due to the image dimensions not being powers of 2 there are some additional setting required
         const texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -117,8 +117,15 @@ const MyGLComponent = () => {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         textureRef.current = texture;
 
-        // Creating reference to brightness uniform
-        brightnessLocationRef.current = gl.getUniformLocation(program, 'brightness');
+        // Creating reference to FILTERS uniforms!!
+        if (program) {
+            brightnessLocationRef.current = gl.getUniformLocation(program, 'brightness');
+            contrastLocationRef.current = gl.getUniformLocation(program, 'contrast');
+            saturationLocationRef.current = gl.getUniformLocation(program, 'saturation');
+            exposureLocationRef.current = gl.getUniformLocation(program, 'exposure');
+            temperatureLocationRef.current = gl.getUniformLocation(program, 'temperature');
+            sharpenLocationRef.current = gl.getUniformLocation(program, 'sharpen');
+        }
 
 
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -137,7 +144,7 @@ const MyGLComponent = () => {
             }
 
             // Take snapshot
-            const snapshot = await GLView.takeSnapshotAsync(glRef.current);
+            const snapshot = await GLView.takeSnapshotAsync(glRef.current, { height: 5000, width: 4000 });
 
             // Save the snapshot to the image library
             const asset = await MediaLibrary.createAssetAsync(snapshot.uri);
@@ -149,17 +156,32 @@ const MyGLComponent = () => {
 
     useEffect(() => {
         // changing brightness uniform without rerendering whole GLView
-        if (glRef.current && brightnessLocationRef.current && textureRef.current) {
+        if (
+            glRef.current &&
+            brightnessLocationRef.current &&
+            contrastLocationRef.current &&
+            saturationLocationRef.current &&
+            exposureLocationRef.current &&
+            temperatureLocationRef &&
+            sharpenLocationRef &&
+            textureRef.current
+        ) {
             const gl: ExpoWebGLRenderingContext = glRef.current;
             gl.useProgram(gl.getParameter(gl.CURRENT_PROGRAM));
 
             gl.uniform1f(brightnessLocationRef.current, state.brightness);
+            gl.uniform1f(contrastLocationRef.current, state.contrast);
+            gl.uniform1f(saturationLocationRef.current, state.saturation);
+            gl.uniform1f(exposureLocationRef.current, state.exposure);
+            gl.uniform1f(temperatureLocationRef.current, state.temperature);
+            gl.uniform1f(sharpenLocationRef.current, state.sharpen);
+
 
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             gl.endFrameEXP();
         }
-    }, [state.brightness]);
+    }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen]);
 
     return (
         <View style={styles.container}>
