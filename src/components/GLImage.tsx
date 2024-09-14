@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {ExpoWebGLRenderingContext, GLView} from 'expo-gl';
 import * as MediaLibrary from 'expo-media-library';
 import { Asset } from 'expo-asset';
-import { StyleSheet, View } from 'react-native';
+import {DimensionValue, LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import EditingContext from "../context/EditingContext";
 import {Button} from "react-native-paper";
 import fragmentShaderSource from "../utils/shader";
 
 const MyGLComponent = () => {
-    const { state } = useContext(EditingContext);
+    const { state, imageURI } = useContext(EditingContext);
     const glRef  = useRef(null);
     const textureRef = useRef<WebGLUniformLocation | null>(null);
     const brightnessLocationRef = useRef<WebGLUniformLocation | null>(null);
@@ -17,6 +17,10 @@ const MyGLComponent = () => {
     const exposureLocationRef = useRef<WebGLUniformLocation | null>(null);
     const temperatureLocationRef = useRef<WebGLUniformLocation | null>(null);
     const sharpenLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const GLWrapperViewRef = useRef<View>(null);
+    const [localWidth, setLocalWidth] = useState<number>(0);
+    const [localHeight, setLocalHeight] = useState<number>(0);
+    const [WebGLViewPixelHeight, setWebGLViewPixelHeight] = useState<number>(0);
 
     const vertexShaderSource = `
         attribute vec4 position;
@@ -27,7 +31,6 @@ const MyGLComponent = () => {
             v_texcoord = texcoord;
         }
     `;
-
 
     const createShader = (gl: ExpoWebGLRenderingContext, type: any, source: string) => {
         // @ts-ignore
@@ -62,8 +65,18 @@ const MyGLComponent = () => {
         }
 
         // Downloading asset (localURI required)
-        const asset = Asset.fromModule(require('../../assets/test_img.jpg'));
-        await asset.downloadAsync();
+        // const asset = Asset.fromModule(require('../../assets/test_img.jpg'));
+        let asset;
+
+        if (imageURI != null) {
+            asset = Asset.fromURI(imageURI);
+            await asset.downloadAsync();
+        }
+
+        if(asset === null || asset === undefined) {
+            throw new Error('Asset not found');
+        }
+
 
         // Shaders compiling
         const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -183,10 +196,47 @@ const MyGLComponent = () => {
         }
     }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen]);
 
+    const setDimensions = (event : LayoutChangeEvent) => {
+        setLocalHeight(event.nativeEvent.layout.height);
+        setLocalWidth(event.nativeEvent.layout.width);
+    }
+
+    useEffect(() => {
+        const uriWidth = state.width || 1; // Ensure uriWidth is not 0 or undefined
+        const uriHeight = state.height || 1; // Ensure uriHeight is not 0 or undefined
+
+        const heightPercentage = (uriHeight * 100) / uriWidth;
+
+        // const WebGLViewPixelHeight = (localWidth * heightPercentage) / 100;
+
+        setWebGLViewPixelHeight( (localWidth * heightPercentage) / 100);
+
+        console.log('WebGLViewPixelHeight', WebGLViewPixelHeight);
+
+    }, [state.width, state.height]);
+
+    const calculateGLViewDimensions = (): number => {
+        const uriWidth = state.width || 1; // Ensure uriWidth is not 0 or undefined
+        const uriHeight = state.height || 1; // Ensure uriHeight is not 0 or undefined
+
+        if (localWidth === 0) {
+            console.log('localWidth is zero, returning default height');
+            return 300; // Fallback to some default height if localWidth is 0
+        }
+
+        const heightPercentage = (uriHeight * 100) / uriWidth;
+
+        const WebGLViewPixelHeight = (localWidth * heightPercentage) / 100;
+
+        console.log('WebGLViewPixelHeight', WebGLViewPixelHeight);
+
+        return WebGLViewPixelHeight;
+    };
+
     return (
-        <View style={styles.container}>
-            <GLView style={styles.glView} onContextCreate={onContextCreate} />
-            <Button onPress={handlePress}>Save</Button>
+        <View style={styles.container} ref={GLWrapperViewRef} onLayout={(e) => setDimensions(e)}>
+            <GLView style={[styles.glView, {width: '100%', height: WebGLViewPixelHeight }]} onContextCreate={onContextCreate} />
+            {/*<Button onPress={handlePress}>Save</Button>*/}
         </View>
     );
 };
@@ -196,11 +246,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
+        marginBottom: '60%'
     },
     glView: {
-        width: 300,
-        height: 400,
         marginTop: 20,
+        objectFit: 'contain'
     },
 });
 
