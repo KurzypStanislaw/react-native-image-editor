@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import EditingContext from "../../context/EditingContext";
 import CustomSlider from "../slider/CustomSlider";
+import {defaultEditorState} from "../../context/EditingContext";
 
 const ColorTab: React.FC = () => {
     const { state, setState } = useContext(EditingContext);
@@ -14,43 +15,48 @@ const ColorTab: React.FC = () => {
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.slidersContainer}>
                 <CustomSlider
-                    initialValue={state.hue}
+                    value={state.hue}
                     minValue={0}
                     maxValue={6.3}
                     onValueChange={(value) => handleChange("hue", value)}
                     title={`Hue`}
+                    defaultValue={defaultEditorState.hue}
                 />
 
                 <CustomSlider
-                    initialValue={state.sepia}
+                    value={state.sepia}
                     minValue={-5}
                     maxValue={5}
                     onValueChange={(value) => handleChange("sepia", value)}
                     title={`Sepia`}
+                    defaultValue={defaultEditorState.sepia}
                 />
 
                 <CustomSlider
-                    initialValue={state.negative}
+                    value={state.negative}
                     minValue={-2}
                     maxValue={2}
                     onValueChange={(value) => handleChange("negative", value)}
                     title={`Negative`}
+                    defaultValue={defaultEditorState.negative}
                 />
 
                 <CustomSlider
-                    initialValue={state.saturation}
+                    value={state.saturation}
                     minValue={-1}
                     maxValue={1}
                     onValueChange={(value) => handleChange("saturation", value)}
                     title={`Saturation`}
+                    defaultValue={defaultEditorState.saturation}
                 />
 
                 <CustomSlider
-                    initialValue={state.temperature}
+                    value={state.temperature}
                     minValue={-10000}
                     maxValue={30000}
                     onValueChange={(value) => handleChange("temperature", value)}
                     title={`Temperature`}
+                    defaultValue={defaultEditorState.temperature}
                 />
             </ScrollView>
         </View>

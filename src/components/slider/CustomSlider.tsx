@@ -1,27 +1,32 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import { Slider } from '@miblanchard/react-native-slider';
 import {StyleSheet, View, Text} from "react-native";
-
+import {Button} from "react-native-paper";
 
 type Props = {
-    initialValue: number;
+    value: number;
     minValue: number;
     maxValue: number;
     onValueChange: (value: number) => void;
     title: string;
+    defaultValue: number;
 }
 
 const CustomSlider : React.FC<Props> = (props) => {
-    const [sliderValue, setSliderValue] = useState<number>(props.initialValue);
 
-
+    const handleReset =  () => {
+        props.onValueChange(props.defaultValue); // set outer state
+    }
 
     return(
         <View>
-            <Text style={styles.sliderTitle}>{props.title}</Text>
+            <View style={styles.sliderHeader}>
+                <Text style={styles.sliderTitle}>{props.title}</Text>
+                { props.defaultValue !== props.value && <Button onPress={handleReset} icon={"restart"} mode={'text'} textColor={"white"}>{null}</Button>}
+            </View>
             <Slider
                 step={0.01}
-                value={sliderValue}
+                value={props.value}
                 minimumValue={props.minValue}
                 maximumValue={props.maxValue}
                 onValueChange={(val) => props.onValueChange(val[0])}
@@ -42,14 +47,20 @@ const styles = StyleSheet.create({
 
     sliderTitle: {
         fontSize: 12,
-        // fontWeight: 'bold',
         fontFamily: 'Roboto',
         color: 'white',
     },
     sliderWrapper: {
         width: '100%',
         justifyContent: 'center'
-    }
+    },
+    sliderHeader: {
+        height: 20,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
 });
 
 export default CustomSlider;
