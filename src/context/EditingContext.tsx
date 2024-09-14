@@ -18,7 +18,7 @@ export interface EditorState {
 }
 
 
-const defaultEditorState: EditorState = {
+export const defaultEditorState: EditorState = {
     width: 0,
     height: 0,
     hue: 0,
