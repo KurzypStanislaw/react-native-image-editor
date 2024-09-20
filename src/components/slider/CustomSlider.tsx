@@ -30,6 +30,7 @@ const CustomSlider : React.FC<Props> = (props) => {
                 minimumValue={props.minValue}
                 maximumValue={props.maxValue}
                 onValueChange={(val) => props.onValueChange(val[0])}
+                trackClickable={false}
             />
         </View>
     );
