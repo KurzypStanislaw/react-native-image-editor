@@ -1,18 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { GLView } from 'expo-gl';
-import * as FileSystem from 'expo-file-system';
-import { Asset } from 'expo-asset';
-import EditingContext from '../../context/EditingContext';
 import BottomMenu from '../../components/menu/BottomMenu';
 import ColorTab from '../../components/colorTab/ColorTab';
-import CropTab from '../../components/cropTab/CropTab';
 import LightTab from '../../components/lightTab/LightTab';
 import { EditingScreenProps } from '../../types/types';
-import {createConditionalWrapper} from "../../utils/CreateConditionalWrapper";
-import Temperature from "../../utils/opengl-image-filters-lib/filters/Temperature";
-import {isUndefinedOrNull} from "../../utils/isUndefinedOrNull";
 import GLImage from "../../components/GLImage";
+
 
 const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
     const { uri } = route.params;
@@ -28,7 +21,7 @@ const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
 
 
             {isColorSelected && <ColorTab />}
-            {isCropSelected && <CropTab />}
+            {/*{isCropSelected && <CropComponent />}*/}
             {isLightSelected && <LightTab />}
 
             <BottomMenu
