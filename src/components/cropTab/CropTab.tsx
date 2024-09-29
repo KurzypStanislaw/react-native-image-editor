@@ -1,13 +1,9 @@
 import React, { useContext } from "react";
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import EditingContext from "../../context/EditingContext";
 
-const ColorTab: React.FC = () => {
+const CropTab: React.FC = () => {
     const { state, setState } = useContext(EditingContext);
-
-    const handleChange = (key: keyof typeof state, newValue: number) => {
-        setState((prevState) => ({ ...prevState, [key]: newValue }));
-    };
 
     return (
         <View style={styles.container}>
@@ -19,7 +15,7 @@ const ColorTab: React.FC = () => {
     );
 };
 
-export default ColorTab;
+export default CropTab;
 
 const styles = StyleSheet.create({
     container: {

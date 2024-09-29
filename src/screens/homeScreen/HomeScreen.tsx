@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
-import {useNavigation} from "@react-navigation/native";
 import {HomeScreenProps} from "../../types/types";
 import EditingContext from "../../context/EditingContext";
 
@@ -40,8 +39,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: false,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
             quality: 1,
+
+
         });
 
         if (!result.canceled) {

@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {ExpoWebGLRenderingContext, GLView} from 'expo-gl';
 import * as MediaLibrary from 'expo-media-library';
 import { Asset } from 'expo-asset';
-import {DimensionValue, LayoutChangeEvent, StyleSheet, View} from 'react-native';
+import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import EditingContext from "../context/EditingContext";
 import {Button} from "react-native-paper";
 import fragmentShaderSource from "../utils/shader";
@@ -157,7 +157,8 @@ const MyGLComponent = () => {
             }
 
             // Take snapshot
-            const snapshot = await GLView.takeSnapshotAsync(glRef.current, { height: 5000, width: 4000 });
+            console.log(`From state. Width: ${state.width}, Height: ${state.height}`);
+            const snapshot = await GLView.takeSnapshotAsync(glRef.current, { height: state.height, width: state.width, compress: 1.0 });
 
             // Save the snapshot to the image library
             const asset = await MediaLibrary.createAssetAsync(snapshot.uri);
@@ -207,8 +208,6 @@ const MyGLComponent = () => {
 
         const heightPercentage = (uriHeight * 100) / uriWidth;
 
-        // const WebGLViewPixelHeight = (localWidth * heightPercentage) / 100;
-
         setWebGLViewPixelHeight( (localWidth * heightPercentage) / 100);
 
         console.log('WebGLViewPixelHeight', WebGLViewPixelHeight);
@@ -236,7 +235,7 @@ const MyGLComponent = () => {
     return (
         <View style={styles.container} ref={GLWrapperViewRef} onLayout={(e) => setDimensions(e)}>
             <GLView style={[styles.glView, {width: '100%', height: WebGLViewPixelHeight }]} onContextCreate={onContextCreate} />
-            {/*<Button onPress={handlePress}>Save</Button>*/}
+            <Button onPress={handlePress}>Save</Button>
         </View>
     );
 };
