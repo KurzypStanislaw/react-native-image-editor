@@ -9,7 +9,7 @@ import EditingContext from "../../context/EditingContext";
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [hasPermission, setHasPermission] = useState<boolean>(false);
-    const { setImageURI, resetState } = useContext(EditingContext);
+    const { setImageURI, resetState, setState } = useContext(EditingContext);
 
     useEffect(() => {
         (async () => {
@@ -23,8 +23,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             navigation.navigate("Edit", {
                 uri: selectedImage,
             });
-            // after choosing new photo all filters should be changed to default values!
-            resetState();
             setImageURI(selectedImage);
         }
     }, [selectedImage]);
@@ -42,12 +40,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             quality: 1,
-
-
         });
+        console.log(result);
 
         if (!result.canceled) {
+            resetState();
+            // setState((prevState) => ({ ...prevState, height: result.assets[0].height, width: result.assets[0].width })); // TODO: causes sth else to break lol
+            console.log(result.assets[0].height, 'x', result.assets[0].width);
             setSelectedImage(result.assets[0].uri);
+            setImageURI(result.assets[0].uri);
         } else {
             alert('You did not select any image.');
         }
