@@ -68,27 +68,6 @@
             return vec4(color.rgb * rgbShift, color.a);
         }
         
-        // vec4 applySharpening(sampler2D texture, float factor, vec2 v_texcoord, vec2 resolution) {
-        //     vec2 step = 1.0 / resolution;
-        //
-        //     // Sample the surrounding pixels
-        //     vec3 texA = texture2D(texture, v_texcoord + vec2(-step.x, -step.y) * 1.5).rgb;
-        //     vec3 texB = texture2D(texture, v_texcoord + vec2( step.x, -step.y) * 1.5).rgb;
-        //     vec3 texC = texture2D(texture, v_texcoord + vec2(-step.x,  step.y) * 1.5).rgb;
-        //     vec3 texD = texture2D(texture, v_texcoord + vec2( step.x,  step.y) * 1.5).rgb;
-        //
-        //     // Calculate the average of the surrounding pixels
-        //     vec3 around = 0.25 * (texA + texB + texC + texD);
-        //
-        //     // Sample the center pixel
-        //     vec3 center = texture2D(texture, v_texcoord).rgb;
-        //
-        //     // Apply sharpening
-        //     vec3 col = center + (center - around) * factor;
-        //
-        //     return vec4(col, 1.0);
-        // }
-        
         vec4 applySharpening(sampler2D texture, float sharpen, vec2 v_texcoord, vec2 resolution) {
             vec2 texelSize = 1.0 / resolution;
         

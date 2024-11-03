@@ -21,7 +21,6 @@ const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
 
 
             {isColorSelected && <ColorTab />}
-            {/*{isCropSelected && <CropComponent />}*/}
             {isLightSelected && <LightTab />}
 
             <BottomMenu

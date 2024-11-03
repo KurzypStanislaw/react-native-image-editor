@@ -38,7 +38,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
+            // allowsEditing: true,
             quality: 1,
         });
         console.log(result);
@@ -56,7 +56,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={handlePress}>
+            <TouchableOpacity onPress={handlePress} style={{justifyContent: 'center', alignItems: 'center'}}>
                 <FontAwesome
                     name="picture-o"
                     size={50}
@@ -77,9 +77,9 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     textWhite: {
-        color: '#ffffff',
-        fontSize: 30,
-        fontWeight: 'bold',
+        color: '#8298ae',
+        fontSize: 15,
+        // fontWeight: 'bold',
         fontFamily: 'Roboto',
         marginTop: 20,
     },

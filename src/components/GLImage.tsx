@@ -169,7 +169,7 @@ const MyGLComponent = () => {
     };
 
     useEffect(() => {
-        // changing brightness uniform without rerendering whole GLView
+        // changing uniforms without rerendering whole GLView
         if (
             glRef.current &&
             brightnessLocationRef.current &&
@@ -198,6 +198,7 @@ const MyGLComponent = () => {
     }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen]);
 
     const setDimensions = (event : LayoutChangeEvent) => {
+        // getting size of the device
         setLocalHeight(event.nativeEvent.layout.height);
         setLocalWidth(event.nativeEvent.layout.width);
     }
@@ -210,27 +211,13 @@ const MyGLComponent = () => {
 
         setWebGLViewPixelHeight( (localWidth * heightPercentage) / 100);
 
-        console.log('WebGLViewPixelHeight', WebGLViewPixelHeight);
-
     }, [state.width, state.height]);
 
-    const calculateGLViewDimensions = (): number => {
-        const uriWidth = state.width || 1; // Ensure uriWidth is not 0 or undefined
-        const uriHeight = state.height || 1; // Ensure uriHeight is not 0 or undefined
-
-        if (localWidth === 0) {
-            console.log('localWidth is zero, returning default height');
-            return 300; // Fallback to some default height if localWidth is 0
-        }
-
-        const heightPercentage = (uriHeight * 100) / uriWidth;
-
-        const WebGLViewPixelHeight = (localWidth * heightPercentage) / 100;
-
+    useEffect(() => {
+        // debugging purposes
         console.log('WebGLViewPixelHeight', WebGLViewPixelHeight);
+    }, [WebGLViewPixelHeight]);
 
-        return WebGLViewPixelHeight;
-    };
 
     return (
         <View style={styles.container} ref={GLWrapperViewRef} onLayout={(e) => setDimensions(e)}>
