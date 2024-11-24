@@ -25,7 +25,7 @@ const DetailTab: React.FC = () => {
                     />
                     <CustomSlider
                         value={state.grain}
-                        minValue={0}
+                        minValue={-1}
                         maxValue={1}
                         onValueChange={(value) => handleChange("grain", value)}
                         title={`Grain`}
@@ -33,7 +33,7 @@ const DetailTab: React.FC = () => {
                     />
                     <CustomSlider
                         value={state.blur}
-                        minValue={0}
+                        minValue={-1}
                         maxValue={1}
                         onValueChange={(value) => handleChange("blur", value)}
                         title={`Blur`}

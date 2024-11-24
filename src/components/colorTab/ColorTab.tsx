@@ -36,8 +36,8 @@ const ColorTab: React.FC = () => {
 
                     <CustomSlider
                         value={state.hue}
-                        minValue={0}
-                        maxValue={6.3}
+                        minValue={-1}
+                        maxValue={1}
                         onValueChange={(value) => handleChange("hue", value)}
                         title={`Hue`}
                         defaultValue={defaultEditorState.hue}

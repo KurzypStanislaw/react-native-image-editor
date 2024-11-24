@@ -18,7 +18,7 @@ const MyGLComponent = () => {
     const exposureLocationRef = useRef<WebGLUniformLocation | null>(null);
     const temperatureLocationRef = useRef<WebGLUniformLocation | null>(null);
     const sharpenLocationRef = useRef<WebGLUniformLocation | null>(null);
-    const grainLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const hueLocationRef = useRef<WebGLUniformLocation | null>(null);
     const GLWrapperViewRef = useRef<View>(null);
     const [localWidth, setLocalWidth] = useState<number>(0);
     const [localHeight, setLocalHeight] = useState<number>(0);
@@ -138,7 +138,7 @@ const MyGLComponent = () => {
             exposureLocationRef.current = gl.getUniformLocation(program, 'exposure');
             temperatureLocationRef.current = gl.getUniformLocation(program, 'temperature');
             sharpenLocationRef.current = gl.getUniformLocation(program, 'sharpen');
-            grainLocationRef.current = gl.getUniformLocation(program, 'grain');
+            hueLocationRef.current = gl.getUniformLocation(program, 'hue');
         }
 
 
@@ -188,7 +188,7 @@ const MyGLComponent = () => {
             exposureLocationRef.current &&
             temperatureLocationRef.current &&
             sharpenLocationRef.current &&
-            grainLocationRef.current &&
+            hueLocationRef.current &&
             textureRef.current
         ) {
             const gl: ExpoWebGLRenderingContext = glRef.current;
@@ -200,14 +200,14 @@ const MyGLComponent = () => {
             gl.uniform1f(exposureLocationRef.current, state.exposure);
             gl.uniform1f(temperatureLocationRef.current, state.temperature);
             gl.uniform1f(sharpenLocationRef.current, state.sharpen);
-            gl.uniform1f(grainLocationRef.current, state.grain);
+            gl.uniform1f(hueLocationRef.current, state.hue);
 
 
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             gl.endFrameEXP();
         }
-    }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen, state.grain]);
+    }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen, state.hue]);
 
     const setDimensions = (event: LayoutChangeEvent) => {
         setLocalHeight(event.nativeEvent.layout.height);
