@@ -5,13 +5,14 @@ import ColorTab from '../../components/colorTab/ColorTab';
 import LightTab from '../../components/lightTab/LightTab';
 import { EditingScreenProps } from '../../types/types';
 import GLImage from "../../components/GLImage";
+import DetailTab from "../../components/detailTab/DetailTab";
 
 
 const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
     const { uri } = route.params;
     const [isColorSelected, setIsColorSelected] = useState(false);
     const [isLightSelected, setIsLightSelected] = useState(false);
-    const [isCropSelected, setIsCropSelected] = useState(false);
+    const [isDetailSelected, setIsDetailSelected] = useState(false);
 
     return (
         <>
@@ -19,9 +20,8 @@ const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
                 <GLImage/>
             </View>
 
-
             {isColorSelected && <ColorTab />}
-            {/*{isCropSelected && <CropComponent />}*/}
+            {isDetailSelected && <DetailTab />}
             {isLightSelected && <LightTab />}
 
             <BottomMenu
@@ -29,8 +29,8 @@ const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
                 setIsColorSelected={setIsColorSelected}
                 isLightSelected={isLightSelected}
                 setIsLightSelected={setIsLightSelected}
-                isCropSelected={isCropSelected}
-                setIsCropSelected={setIsCropSelected}
+                isDetailSelected={isDetailSelected}
+                setIsDetailSelected={setIsDetailSelected}
             />
         </>
     );
