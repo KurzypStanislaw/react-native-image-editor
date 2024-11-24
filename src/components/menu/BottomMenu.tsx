@@ -1,14 +1,14 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Button } from "react-native-paper";
+import {StyleSheet, View} from "react-native";
+import {Button} from "react-native-paper";
 
 type ListMenuProps = {
     isLightSelected: boolean;
     setIsLightSelected: React.Dispatch<React.SetStateAction<boolean>>;
     isColorSelected: boolean;
     setIsColorSelected: React.Dispatch<React.SetStateAction<boolean>>;
-    isCropSelected: boolean;
-    setIsCropSelected: React.Dispatch<React.SetStateAction<boolean>>;
+    isDetailSelected: boolean;
+    setIsDetailSelected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const BottomMenu: React.FC<ListMenuProps> = ({
@@ -16,22 +16,22 @@ const BottomMenu: React.FC<ListMenuProps> = ({
                                                  setIsLightSelected,
                                                  isColorSelected,
                                                  setIsColorSelected,
-                                                 isCropSelected,
-                                                 setIsCropSelected,
+                                                 isDetailSelected,
+                                                 setIsDetailSelected,
                                              }) => {
     const handlePress = (id: string) => {
         if (id === "light") {
             setIsLightSelected(!isLightSelected);
             setIsColorSelected(false);
-            setIsCropSelected(false);
+            setIsDetailSelected(false);
         } else if (id === "color") {
             setIsLightSelected(false);
             setIsColorSelected(!isColorSelected);
-            setIsCropSelected(false);
-        } else if (id === "crop") {
+            setIsDetailSelected(false);
+        } else if (id === "detail") {
             setIsLightSelected(false);
             setIsColorSelected(false);
-            setIsCropSelected(!isCropSelected);
+            setIsDetailSelected(!isDetailSelected);
         }
     };
 
@@ -54,12 +54,12 @@ const BottomMenu: React.FC<ListMenuProps> = ({
                 Color
             </Button>
             <Button
-                icon={"crop"}
-                mode={isCropSelected ? "contained-tonal" : "outlined"}
-                testID={"crop"}
-                onPress={() => handlePress("crop")}
+                icon={"details"}
+                mode={isDetailSelected ? "contained-tonal" : "outlined"}
+                testID={"detail"}
+                onPress={() => handlePress("detail")}
             >
-                Crop
+                Detail
             </Button>
         </View>
     );

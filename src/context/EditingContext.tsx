@@ -1,5 +1,5 @@
 import React, {createContext, FC, useState, ReactNode, useEffect} from "react";
-import { Image } from 'react-native';
+import {Image} from 'react-native';
 
 export interface EditorState {
     width: number;
@@ -14,6 +14,7 @@ export interface EditorState {
     brightness: number;
     temperature: number;
     exposure: number;
+    grain: number;
     colorOverlay: [number, number, number];
 }
 
@@ -31,6 +32,7 @@ export const defaultEditorState: EditorState = {
     brightness: 0,
     temperature: 0,
     exposure: 0,
+    grain: 0,
     colorOverlay: [0.0, 0.0, 0.0],
 };
 
@@ -43,14 +45,17 @@ const EditingContext = createContext<{
     resetState: () => void;
 }>({
     imageURI: "",
-    setImageURI: () => {},
+    setImageURI: () => {
+    },
     state: defaultEditorState,
-    setState: () => {},
-    resetState: () => {}
+    setState: () => {
+    },
+    resetState: () => {
+    }
 });
 
 
-const EditingProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const EditingProvider: FC<{ children: ReactNode }> = ({children}) => {
     const [state, setState] = useState<EditorState>(defaultEditorState);
     const [imageURI, setImageURI] = React.useState<string | null>(null);
 
@@ -93,11 +98,11 @@ const EditingProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     return (
-        <EditingContext.Provider value={{ state, setState, imageURI, setImageURI, resetState }}>
+        <EditingContext.Provider value={{state, setState, imageURI, setImageURI, resetState}}>
             {children}
         </EditingContext.Provider>
     );
 };
 
-export { EditingProvider };
+export {EditingProvider};
 export default EditingContext;
