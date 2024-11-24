@@ -26,7 +26,7 @@ const DetailTab: React.FC = () => {
                     <CustomSlider
                         value={state.grain}
                         minValue={0}
-                        maxValue={0.1}
+                        maxValue={1}
                         onValueChange={(value) => handleChange("grain", value)}
                         title={`Grain`}
                         defaultValue={defaultEditorState.grain}
@@ -34,7 +34,7 @@ const DetailTab: React.FC = () => {
                     <CustomSlider
                         value={state.blur}
                         minValue={0}
-                        maxValue={30}
+                        maxValue={1}
                         onValueChange={(value) => handleChange("blur", value)}
                         title={`Blur`}
                         defaultValue={defaultEditorState.blur}
