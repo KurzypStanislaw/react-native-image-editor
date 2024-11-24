@@ -1,15 +1,16 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {ExpoWebGLRenderingContext, GLView} from 'expo-gl';
 import * as MediaLibrary from 'expo-media-library';
-import { Asset } from 'expo-asset';
-import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
+import {Asset} from 'expo-asset';
+import {LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import EditingContext from "../context/EditingContext";
 import {Button} from "react-native-paper";
 import fragmentShaderSource from "../utils/shader";
+import Toast from 'react-native-root-toast';
 
 const MyGLComponent = () => {
-    const { state, imageURI } = useContext(EditingContext);
-    const glRef  = useRef(null);
+    const {state, imageURI} = useContext(EditingContext);
+    const glRef = useRef<ExpoWebGLRenderingContext | undefined>();
     const textureRef = useRef<WebGLUniformLocation | null>(null);
     const brightnessLocationRef = useRef<WebGLUniformLocation | null>(null);
     const contrastLocationRef = useRef<WebGLUniformLocation | null>(null);
@@ -60,12 +61,10 @@ const MyGLComponent = () => {
 
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
         // Setting reference to current WebGL context
-        if( gl !== null ) {
+        if (gl !== null) {
             glRef.current = gl;
         }
 
-        // Downloading asset (localURI required)
-        // const asset = Asset.fromModule(require('../../assets/test_img.jpg'));
         let asset;
 
         if (imageURI != null) {
@@ -73,7 +72,7 @@ const MyGLComponent = () => {
             await asset.downloadAsync();
         }
 
-        if(asset === null || asset === undefined) {
+        if (asset === null || asset === undefined) {
             throw new Error('Asset not found');
         }
 
@@ -92,8 +91,8 @@ const MyGLComponent = () => {
         const positions = new Float32Array([
             -1, -1,
             1, -1,
-            -1,  1,
-            1,  1,
+            -1, 1,
+            1, 1,
         ]);
         gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
         const positionAttributeLocation = gl.getAttribLocation(program, 'position');
@@ -123,7 +122,7 @@ const MyGLComponent = () => {
         const texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, { localUri: asset.localUri });
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, {localUri: asset.localUri});
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -147,10 +146,10 @@ const MyGLComponent = () => {
         gl.endFrameEXP();
     };
 
-    const handlePress = async () => {
+    const handleSave = async () => {
         try {
             // Request media library permission
-            const { status } = await MediaLibrary.requestPermissionsAsync();
+            const {status} = await MediaLibrary.requestPermissionsAsync();
             if (status !== 'granted') {
                 alert('Sorry, we need media library permissions to save images!');
                 return;
@@ -158,13 +157,23 @@ const MyGLComponent = () => {
 
             // Take snapshot
             console.log(`From state. Width: ${state.width}, Height: ${state.height}`);
-            const snapshot = await GLView.takeSnapshotAsync(glRef.current, { height: state.height, width: state.width, compress: 1.0 });
+            const snapshot = await GLView.takeSnapshotAsync(glRef.current, {
+                height: state.height,
+                width: state.width,
+                compress: 1.0
+            });
 
             // Save the snapshot to the image library
             const asset = await MediaLibrary.createAssetAsync(snapshot.uri);
             console.log('Image saved to gallery!', asset);
+            Toast.show('Image saved successfully.', {
+                duration: Toast.durations.LONG, position: 80,
+            });
         } catch (error) {
             console.error('Error saving image:', error);
+            Toast.show('Error saving image!', {
+                duration: Toast.durations.LONG, position: Toast.positions.TOP,
+            });
         }
     };
 
@@ -197,7 +206,7 @@ const MyGLComponent = () => {
         }
     }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen]);
 
-    const setDimensions = (event : LayoutChangeEvent) => {
+    const setDimensions = (event: LayoutChangeEvent) => {
         setLocalHeight(event.nativeEvent.layout.height);
         setLocalWidth(event.nativeEvent.layout.width);
     }
@@ -208,7 +217,7 @@ const MyGLComponent = () => {
 
         const heightPercentage = (uriHeight * 100) / uriWidth;
 
-        setWebGLViewPixelHeight( (localWidth * heightPercentage) / 100);
+        setWebGLViewPixelHeight((localWidth * heightPercentage) / 100);
 
         console.log('WebGLViewPixelHeight', WebGLViewPixelHeight);
 
@@ -234,8 +243,19 @@ const MyGLComponent = () => {
 
     return (
         <View style={styles.container} ref={GLWrapperViewRef} onLayout={(e) => setDimensions(e)}>
-            <GLView style={[styles.glView, {width: '100%', height: WebGLViewPixelHeight }]} onContextCreate={onContextCreate} />
-            <Button onPress={handlePress}>Save</Button>
+
+            <GLView style={[styles.glView, {width: '100%', height: WebGLViewPixelHeight}]}
+                    onContextCreate={onContextCreate}/>
+
+            <Button
+                icon={"content-save"}
+                mode={"contained-tonal"}
+                testID={"detail"}
+                onPress={handleSave}
+                style={{margin: 20}}
+            >
+                Save
+            </Button>
         </View>
     );
 };
