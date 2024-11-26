@@ -18,6 +18,7 @@ const MyGLComponent = () => {
     const exposureLocationRef = useRef<WebGLUniformLocation | null>(null);
     const temperatureLocationRef = useRef<WebGLUniformLocation | null>(null);
     const sharpenLocationRef = useRef<WebGLUniformLocation | null>(null);
+    const hueLocationRef = useRef<WebGLUniformLocation | null>(null);
     const GLWrapperViewRef = useRef<View>(null);
     const [localWidth, setLocalWidth] = useState<number>(0);
     const [localHeight, setLocalHeight] = useState<number>(0);
@@ -137,6 +138,7 @@ const MyGLComponent = () => {
             exposureLocationRef.current = gl.getUniformLocation(program, 'exposure');
             temperatureLocationRef.current = gl.getUniformLocation(program, 'temperature');
             sharpenLocationRef.current = gl.getUniformLocation(program, 'sharpen');
+            hueLocationRef.current = gl.getUniformLocation(program, 'hue');
         }
 
 
@@ -178,15 +180,15 @@ const MyGLComponent = () => {
     };
 
     useEffect(() => {
-        // changing brightness uniform without rerendering whole GLView
         if (
             glRef.current &&
             brightnessLocationRef.current &&
             contrastLocationRef.current &&
             saturationLocationRef.current &&
             exposureLocationRef.current &&
-            temperatureLocationRef &&
-            sharpenLocationRef &&
+            temperatureLocationRef.current &&
+            sharpenLocationRef.current &&
+            hueLocationRef.current &&
             textureRef.current
         ) {
             const gl: ExpoWebGLRenderingContext = glRef.current;
@@ -198,13 +200,14 @@ const MyGLComponent = () => {
             gl.uniform1f(exposureLocationRef.current, state.exposure);
             gl.uniform1f(temperatureLocationRef.current, state.temperature);
             gl.uniform1f(sharpenLocationRef.current, state.sharpen);
+            gl.uniform1f(hueLocationRef.current, state.hue);
 
 
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             gl.endFrameEXP();
         }
-    }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen]);
+    }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen, state.hue]);
 
     const setDimensions = (event: LayoutChangeEvent) => {
         setLocalHeight(event.nativeEvent.layout.height);

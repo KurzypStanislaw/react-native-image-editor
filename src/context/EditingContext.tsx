@@ -72,6 +72,7 @@ const EditingProvider: FC<{ children: ReactNode }> = ({children}) => {
     useEffect(() => console.log(`Temperature changed to: ${state.temperature}`), [state.temperature]);
     useEffect(() => console.log(`Exposure changed to: ${state.exposure}`), [state.exposure]);
     useEffect(() => console.log(`ColorOverlay changed to: [${state.colorOverlay}]`), [state.colorOverlay]);
+    useEffect(() => console.log(`Grain changed to: [${state.grain}]`), [state.grain]);
 
     useEffect(() => {
         if (imageURI) {
