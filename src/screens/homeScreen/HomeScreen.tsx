@@ -1,9 +1,8 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import {HomeScreenProps} from "../../types/types";
+import { HomeScreenProps } from "../../types/types";
 import EditingContext from "../../context/EditingContext";
-
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -22,7 +21,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             navigation.navigate("Edit", {
                 uri: selectedImage,
             });
-            // after choosing new photo all filters should be changed to default values!
             resetState();
             setImageURI(selectedImage);
         }
@@ -41,8 +39,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             quality: 1,
-
-
         });
 
         if (!result.canceled) {
@@ -53,34 +49,43 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={handlePress}>
-                <Text style={styles.textWhite}>▶️CLICK TO SELECT A PHOTO◀️</Text>
-            </TouchableOpacity>
-        </View>
+        <ImageBackground
+            source={require('../../../assets/background.jpg')}
+            style={styles.background}
+            resizeMode="cover"
+        >
+            <View style={styles.overlay}>
+                <TouchableOpacity onPress={handlePress}>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.textWhite}>▶️CLICK TO SELECT A PHOTO◀️</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </ImageBackground>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
+    background: {
+        flex: 1,
+    },
+    overlay: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2b3349',
-        padding: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    },
+    textContainer: {
+        backgroundColor: 'rgba(10, 0, 0, 0.6)',
+        borderRadius: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
     },
     textWhite: {
         color: '#ffffff',
         fontSize: 20,
         fontWeight: 'bold',
         fontFamily: 'Roboto',
-        marginTop: 20,
-    },
-    image: {
-        width: 300,
-        height: 300,
-        marginTop: 20,
-        borderRadius: 10,
     },
 });
 

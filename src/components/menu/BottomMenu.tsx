@@ -39,25 +39,35 @@ const BottomMenu: React.FC<ListMenuProps> = ({
         <View style={styles.container}>
             <Button
                 icon={"weather-sunny"}
-                mode={isLightSelected ? "contained-tonal" : "outlined"}
+                mode="contained"
                 testID={"light"}
                 onPress={() => handlePress("light")}
+                contentStyle={{backgroundColor: isLightSelected ? "#7244c8" : "#cebce1"}}
+                textColor={isLightSelected ? "#ffffff" : "#4c2897"}
             >
                 Light
             </Button>
             <Button
                 icon={"format-color-fill"}
-                mode={isColorSelected ? "contained-tonal" : "outlined"}
+                mode="contained"
                 testID={"color"}
                 onPress={() => handlePress("color")}
+                contentStyle={{backgroundColor: isColorSelected ? "#7244c8" : "#cebce1"}}
+                labelStyle={{
+                    color: isColorSelected ? "#ffffff" : "#4c2897",
+                }}
             >
                 Color
             </Button>
             <Button
-                icon={"details"}
-                mode={isDetailSelected ? "contained-tonal" : "outlined"}
-                testID={"detail"}
+                icon="details"
+                mode="contained"
+                testID="detail"
                 onPress={() => handlePress("detail")}
+                contentStyle={{backgroundColor: isDetailSelected ? "#7244c8" : "#cebce1"}}
+                labelStyle={{
+                    color: isDetailSelected ? "#ffffff" : "#4c2897",
+                }}
             >
                 Detail
             </Button>
@@ -74,8 +84,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-evenly",
-        backgroundColor: "white",
-        height: 50,
+        backgroundColor: "#333131",
+        height: 70,
+        borderRadius: 10,
+        borderTopLeftRadius: 10,
+        color: '#FFFFFF'
     },
 });
 
