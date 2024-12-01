@@ -9,7 +9,6 @@ import DetailTab from "../../components/detailTab/DetailTab";
 
 
 const EditingScreen: React.FC<EditingScreenProps> = ({ route }) => {
-    const { uri } = route.params;
     const [isColorSelected, setIsColorSelected] = useState(false);
     const [isLightSelected, setIsLightSelected] = useState(false);
     const [isDetailSelected, setIsDetailSelected] = useState(false);
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        backgroundColor: '#2b3347',
+        backgroundColor: '#171722',
         width: '100%',
         height: '70%',
     },
