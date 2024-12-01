@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
 import {HomeScreenProps} from "../../types/types";
 import EditingContext from "../../context/EditingContext";
@@ -56,12 +55,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={handlePress}>
-                <FontAwesome
-                    name="picture-o"
-                    size={50}
-                    color="#FFF"
-                />
-                <Text style={styles.textWhite}>Click anywhere to start!</Text>
+                <Text style={styles.textWhite}>▶️CLICK TO SELECT A PHOTO◀️</Text>
             </TouchableOpacity>
         </View>
     );
@@ -77,7 +71,7 @@ const styles = StyleSheet.create({
     },
     textWhite: {
         color: '#ffffff',
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: 'bold',
         fontFamily: 'Roboto',
         marginTop: 20,
