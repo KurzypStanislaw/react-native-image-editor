@@ -18,7 +18,7 @@ export interface EditorState {
     colorOverlay: [number, number, number];
 }
 
-
+// some of these filters are not implemented yet
 export const defaultEditorState: EditorState = {
     width: 0,
     height: 0,
