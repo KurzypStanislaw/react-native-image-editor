@@ -18,8 +18,8 @@ const ColorTab: React.FC = () => {
                 <ScrollView contentContainerStyle={styles.slidersContainer}>
                     <CustomSlider
                         value={state.temperature}
-                        minValue={-10000}
-                        maxValue={30000}
+                        minValue={0}
+                        maxValue={13000}
                         onValueChange={(value) => handleChange("temperature", value)}
                         title={`Temperature`}
                         defaultValue={defaultEditorState.temperature}

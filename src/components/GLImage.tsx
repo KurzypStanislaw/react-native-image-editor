@@ -4,12 +4,12 @@ import * as MediaLibrary from 'expo-media-library';
 import {Asset} from 'expo-asset';
 import {LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import EditingContext from "../context/EditingContext";
-import {Button} from "react-native-paper";
 import fragmentShaderSource from "../utils/shader";
 import Toast from 'react-native-root-toast';
+import {Button} from "react-native-paper";
 
 const MyGLComponent = () => {
-    const {state, imageURI} = useContext(EditingContext);
+    const {state, imageURI, setState} = useContext(EditingContext);
     const glRef = useRef<ExpoWebGLRenderingContext | undefined>();
     const textureRef = useRef<WebGLUniformLocation | null>(null);
     const brightnessLocationRef = useRef<WebGLUniformLocation | null>(null);
@@ -116,8 +116,9 @@ const MyGLComponent = () => {
 
         const resolutionAttributeLocation = gl.getAttribLocation(program, 'resolution');
         gl.uniform2f(resolutionAttributeLocation, asset.width as number, asset.height as number);
-        console.log('Width: ', asset.width, 'Height: ', asset.height);
 
+        //FIXME: this is quickfix for dealing with weird ExpoGL initialization, temperature must be explicitly set as it value cannot be default as 0
+        setState({...state, temperature: 6500});
 
         // Creating texture, due to the image dimensions not being powers of 2 there are some additional setting required
         const texture = gl.createTexture();
@@ -169,7 +170,7 @@ const MyGLComponent = () => {
             const asset = await MediaLibrary.createAssetAsync(snapshot.uri);
             console.log('Image saved to gallery!', asset);
             Toast.show('Image saved successfully.', {
-                duration: Toast.durations.LONG, position: 80,
+                duration: Toast.durations.SHORT, position: 80,
             });
         } catch (error) {
             console.error('Error saving image:', error);
@@ -207,7 +208,7 @@ const MyGLComponent = () => {
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             gl.endFrameEXP();
         }
-    }, [state.brightness, state.exposure, state.saturation, state.contrast, state.temperature, state.sharpen, state.hue]);
+    }, [state]);
 
     const setDimensions = (event: LayoutChangeEvent) => {
         setLocalHeight(event.nativeEvent.layout.height);
@@ -226,23 +227,7 @@ const MyGLComponent = () => {
 
     }, [state.width, state.height]);
 
-    const calculateGLViewDimensions = (): number => {
-        const uriWidth = state.width || 1; // Ensure uriWidth is not 0 or undefined
-        const uriHeight = state.height || 1; // Ensure uriHeight is not 0 or undefined
 
-        if (localWidth === 0) {
-            console.log('localWidth is zero, returning default height');
-            return 300; // Fallback to some default height if localWidth is 0
-        }
-
-        const heightPercentage = (uriHeight * 100) / uriWidth;
-
-        const WebGLViewPixelHeight = (localWidth * heightPercentage) / 100;
-
-        console.log('WebGLViewPixelHeight', WebGLViewPixelHeight);
-
-        return WebGLViewPixelHeight;
-    };
 
     return (
         <View style={styles.container} ref={GLWrapperViewRef} onLayout={(e) => setDimensions(e)}>

@@ -1,7 +1,7 @@
 import HomeScreen from "./src/screens/homeScreen/HomeScreen";
 import EditingScreen from "./src/screens/editingScreen/EditingScreen";
 import React from "react";
-import {IconButton, PaperProvider} from "react-native-paper";
+import {PaperProvider} from "react-native-paper";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList} from "./src/types/types";
@@ -19,7 +19,10 @@ export default function App() {
                     <EditingProvider>
                         <Stack.Navigator initialRouteName="Home">
                             <Stack.Screen name="Home" component={HomeScreen}/>
-                            <Stack.Screen name="Edit" component={EditingScreen}/>
+                            <Stack.Screen
+                                name="Edit"
+                                component={EditingScreen}
+                            />
                         </Stack.Navigator>
                     </EditingProvider>
                 </NavigationContainer>

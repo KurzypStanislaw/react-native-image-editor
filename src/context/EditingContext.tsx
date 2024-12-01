@@ -30,7 +30,7 @@ export const defaultEditorState: EditorState = {
     contrast: 0,
     saturation: 0,
     brightness: 0,
-    temperature: 0,
+    temperature: 6500,
     exposure: 0,
     grain: 0,
     colorOverlay: [0.0, 0.0, 0.0],
