@@ -42,24 +42,6 @@ const ColorTab: React.FC = () => {
                         title={`Hue`}
                         defaultValue={defaultEditorState.hue}
                     />
-
-                    <CustomSlider
-                        value={state.sepia}
-                        minValue={-5}
-                        maxValue={5}
-                        onValueChange={(value) => handleChange("sepia", value)}
-                        title={`Sepia`}
-                        defaultValue={defaultEditorState.sepia}
-                    />
-
-                    <CustomSlider
-                        value={state.negative}
-                        minValue={-2}
-                        maxValue={2}
-                        onValueChange={(value) => handleChange("negative", value)}
-                        title={`Negative`}
-                        defaultValue={defaultEditorState.negative}
-                    />
                 </ScrollView>
             </BlurView>
         </View>

@@ -23,22 +23,6 @@ const DetailTab: React.FC = () => {
                         title={`Sharpen`}
                         defaultValue={defaultEditorState.sharpen}
                     />
-                    <CustomSlider
-                        value={state.grain}
-                        minValue={-1}
-                        maxValue={1}
-                        onValueChange={(value) => handleChange("grain", value)}
-                        title={`Grain`}
-                        defaultValue={defaultEditorState.grain}
-                    />
-                    <CustomSlider
-                        value={state.blur}
-                        minValue={-1}
-                        maxValue={1}
-                        onValueChange={(value) => handleChange("blur", value)}
-                        title={`Blur`}
-                        defaultValue={defaultEditorState.blur}
-                    />
                 </ScrollView>
             </BlurView>
         </View>
