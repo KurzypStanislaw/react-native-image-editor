@@ -17,8 +17,24 @@ export default function App() {
             <PaperProvider>
                 <NavigationContainer>
                     <EditingProvider>
-                        <Stack.Navigator initialRouteName="Home">
-                            <Stack.Screen name="Home" component={HomeScreen}/>
+                        <Stack.Navigator
+                            initialRouteName="Home"
+                            screenOptions={{
+                                headerStyle: {
+                                    backgroundColor: '#333131',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}>
+                            <Stack.Screen
+                                name="Home"
+                                component={HomeScreen}
+                                options={{
+                                    title: "react-native-image-editor",
+                                }}
+                            />
                             <Stack.Screen
                                 name="Edit"
                                 component={EditingScreen}
