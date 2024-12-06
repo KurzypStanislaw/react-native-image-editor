@@ -8,7 +8,7 @@ import fragmentShaderSource from "../utils/shader";
 import Toast from 'react-native-root-toast';
 import {Button} from "react-native-paper";
 
-const MyGLComponent = () => {
+const GLImage = () => {
     const {state, imageURI, setState} = useContext(EditingContext);
     const glRef = useRef<ExpoWebGLRenderingContext | undefined>();
     const textureRef = useRef<WebGLUniformLocation | null>(null);
@@ -77,7 +77,6 @@ const MyGLComponent = () => {
             throw new Error('Asset not found');
         }
 
-
         // Shaders compiling
         const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
         const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -131,7 +130,7 @@ const MyGLComponent = () => {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         textureRef.current = texture;
 
-        // Creating reference to FILTERS uniforms!!
+        // Creating reference to filters uniforms
         if (program) {
             brightnessLocationRef.current = gl.getUniformLocation(program, 'brightness');
             contrastLocationRef.current = gl.getUniformLocation(program, 'contrast');
@@ -142,9 +141,9 @@ const MyGLComponent = () => {
             hueLocationRef.current = gl.getUniformLocation(program, 'hue');
         }
 
-
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
         // Exporting frame to render
         gl.endFrameEXP();
     };
@@ -261,4 +260,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MyGLComponent;
+export default GLImage;
